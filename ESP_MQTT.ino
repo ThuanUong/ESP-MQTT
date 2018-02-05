@@ -35,3 +35,38 @@ void loop() {
   // put your main code here, to run repeatedly:
 
 }
+void send_command(String cmd) {
+  Serial.println(cmd);
+  //cmd += "\r\n";
+  //  esp.print(Serial.read());
+  esp.println(cmd);
+  if (esp.available()) {
+    delay(100);
+    Serial.write(esp.read());
+  }
+  //   delay(10);
+}
+boolean connect_wifi() {
+  unsigned int status = 0;
+  while(status!=1){
+  esp.println("AT+CWMODE=1");
+  String cmd = "AT+CWJAP=\"";
+  cmd += ssid;
+  cmd += "\",\"";
+  cmd += password;
+  cmd += "\"";
+  send_command(cmd);
+  delay(5000);
+  if (esp.find("OK")) {
+    Serial.println("Connected");
+    status = 1;
+    return true;
+  }
+  else
+  {
+    Serial.println("Could not connect");
+    status = 0;
+    return false;
+  }
+}
+}
