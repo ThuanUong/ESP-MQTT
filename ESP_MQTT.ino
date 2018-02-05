@@ -27,8 +27,16 @@ void callback(char* topic, byte* payload, unsigned int length) {
 WiFiClient espClient;
 PubSubClient client(broker, port, callback, espClient);
 void setup() {
-  // put your setup code here, to run once:
-
+  Serial.begin(115200);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+  esp.begin(115200);
+  Serial.println("Starting");
+  send_command("AT"); // check response
+  delay(10);
+  connect_wifi();
+  send_command("AT+CIFSR");
 }
 
 void loop() {
